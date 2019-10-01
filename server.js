@@ -92,71 +92,78 @@ var dbController = (function() {
 /*****************************************************************************/
 //pre-step init DB and create(if it is not exists from last time... create noteMSG table)
 
+
 var db = dbController.initDB();
 dbController.initNoteTable();
-dbController.truncate();
+//dbController.truncate();
 
-app.get('/', function(req,res){
-  res.send("Welcome to Invoicing App");
-});
+var serverController = (function() {
 
-app.listen(PORT, function(){
-  console.log(`App running on localhost:${PORT}`);
-});
-
-app.get("/createTable", function(req, res) {
-
-  db = dbController.createTable();  
-
-  res.send("createTable Succses");
-
-});
-
-app.post("/addNote", function(req, res) {
-  
-  let noteMSG = req.body.NoteMessage;
-  dbController.addNewNote(noteMSG);
-
-  console.log(noteMSG);
-  
-  
-//   res.json({
-//     "status": true,
-//     "message": "insert "
-// });
-  dbController.read();
-  res.send(`${noteMSG} added.`);
-
-});
-
-
-app.post("/deleteNote", function(req, res) {
-  
-  let test = req.body.id;
-  dbController.deleteNote(test);
-  console.log("---------------remove now " + test);
-  dbController.read();
-
-
-});
-
-app.get("/deleteAll", function(req, res) {
-  
-  dbController.deleteAll();
-  console.log("---------------remove all now ");
-  res.send("remove all success");
-  
-  db = dbController.createTable();  
-  dbController.read();
-
-});
-
-app.get("/truncate", function(req, res) {
-  
-    dbController.truncate();
-    console.log("---------------truncate all now ");
-    res.send("truncate all success");
     
-    dbController.read();
-  
-  });
+    app.get('/', function(req,res){
+        res.send("Welcome to Invoicing App");
+      });
+      
+      app.listen(PORT, function(){
+        console.log(`App running on localhost:${PORT}`);
+      });
+      
+      app.get("/createTable", function(req, res) {
+      
+        db = dbController.createTable();  
+      
+        res.send("createTable Succses");
+      
+      });
+      
+      app.post("/addNote", function(req, res) {
+        
+        let noteMSG = req.body.NoteMessage;
+        dbController.addNewNote(noteMSG);
+      
+        console.log(noteMSG);
+        
+        
+      //   res.json({
+      //     "status": true,
+      //     "message": "insert "
+      // });
+        dbController.read();
+        res.send(`${noteMSG} added.`);
+      
+      });
+      
+      
+      app.post("/deleteNote", function(req, res) {
+        
+        let test = req.body.id;
+        dbController.deleteNote(test);
+        console.log("---------------remove now " + test);
+        dbController.read();
+      
+      
+      });
+      
+      app.get("/deleteAll", function(req, res) {
+        
+        dbController.deleteAll();
+        console.log("---------------remove all now ");
+        res.send("remove all success");
+        
+        db = dbController.createTable();  
+        dbController.read();
+      
+      });
+      
+      app.get("/truncate", function(req, res) {
+        
+          dbController.truncate();
+          console.log("---------------truncate all now ");
+          res.send("truncate all success");
+          
+          dbController.read();
+        
+        });
+
+})();
+
