@@ -2,11 +2,12 @@
   const express = require('express')
   const PORT = process.env.PORT || 5555;
   const app = express();
+  const Promise = require('bluebird')
 
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
 
-
+  var arr = [];
 
 /*****************************************************************************/
 var dbController = (function() {
@@ -82,12 +83,29 @@ var dbController = (function() {
             update: function(NoteMessage, id){
                 const stmt = db.prepare('UPDATE TODONOTES SET NoteMessage = ? WHERE id = ?'); 
                 const updates = stmt.run(NoteMessage, id);
+            },
+            getAll: function (){
+              return db.all(`SELECT * FROM TODONOTES`)
+
+
+
+              
+              // console.log(s.arr);
+
+              // db.close();
+
+            },
+            test: function(){
+              getData();
             }
            
           
     };
     
 })();
+
+
+/*****************************************************************************/
 
 /*****************************************************************************/
 //pre-step init DB and create(if it is not exists from last time... create noteMSG table)
@@ -123,11 +141,6 @@ var serverController = (function() {
       
         console.log(noteMSG);
         
-        
-      //   res.json({
-      //     "status": true,
-      //     "message": "insert "
-      // });
         dbController.read();
         res.send(`${noteMSG} added.`);
       
@@ -163,6 +176,29 @@ var serverController = (function() {
           
           dbController.read();
         
+        });
+
+       
+        function rowObj(id, NoteMessage) {
+          this.id = id;
+          this.NoteMessage = NoteMessage;
+        }
+
+        app.get("/getDb", function(req, res) {
+
+          db = dbController.getAll();
+          
+          db.all("SELECT rowid AS id, NoteMessage FROM TODONOTES", function(err, rows) {
+            arr = [];
+            rows.forEach(function (row) {
+              var newRow = new rowObj(row.id, row.NoteMessage);
+              arr.push(newRow);
+            });
+
+            res.send(JSON.stringify(arr));
+        });
+
+
         });
 
 })();
