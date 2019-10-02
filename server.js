@@ -41,7 +41,6 @@ var dbController = (function() {
 
                 });
 
-                // db.close();
 
               },
 
@@ -187,7 +186,7 @@ var serverController = (function() {
         app.get("/getDb", function(req, res) {
 
           db = dbController.getAll();
-          
+
           db.all("SELECT rowid AS id, NoteMessage FROM TODONOTES", function(err, rows) {
             arr = [];
             rows.forEach(function (row) {
